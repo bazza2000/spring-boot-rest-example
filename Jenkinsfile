@@ -23,6 +23,7 @@ pipeline {
         }
 
         stage('Deliver') {
+            agent any
             steps {
                 sh '/usr/bin/docker build -t spring-boot-rest-example .'
             }
