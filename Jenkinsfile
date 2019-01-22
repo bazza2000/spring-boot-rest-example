@@ -24,7 +24,7 @@ pipeline {
 
         stage('Deliver') {
             steps {
-                sh 'docker build -t spring-boot-rest-example .'
+                sh '/usr/bin/docker build -t spring-boot-rest-example .'
             }
         }
     }
