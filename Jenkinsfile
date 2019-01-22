@@ -21,6 +21,7 @@ pipeline {
                 }
             }
         }
+
         stage('Deliver') {
             steps {
                 sh 'mvn spring-boot:run -Drun.arguments="spring.profiles.active=test"'
