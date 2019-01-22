@@ -29,7 +29,7 @@ pipeline {
             }
         }
 
-        stage('Deliver') {
+        stage('Containerize') {
             steps {
                 sh '/usr/bin/docker build -t spring-boot-rest-example .'
             }
