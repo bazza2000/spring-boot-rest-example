@@ -1,17 +1,24 @@
 pipeline {
+    agent any
+    stages {
+        stage('Build') { 
     agent {
         docker {
             image 'maven:3-alpine' 
             args '-v /root/.m2:/root/.m2' 
         }
     }
-    stages {
-        stage('Build') { 
             steps {
                 sh 'mvn -B -DskipTests clean package' 
             }
         }
         stage('Test') {
+    agent {
+        docker {
+            image 'maven:3-alpine' 
+            args '-v /root/.m2:/root/.m2' 
+        }
+    }
             steps {
                 sh 'mvn test'
             }
@@ -23,7 +30,6 @@ pipeline {
         }
 
         stage('Deliver') {
-            agent { node { label 'master' } }
             steps {
                 sh '/usr/bin/docker build -t spring-boot-rest-example .'
             }
