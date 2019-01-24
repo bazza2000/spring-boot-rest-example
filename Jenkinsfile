@@ -5,12 +5,13 @@ pipeline {
     agent {
         docker {
             image 'maven:3-alpine' 
-            args '-v /root/.m2:/root/.m2' 
+            args '-v /root/.m2:/root/.m2 -v /mnt:/artifacts' 
         }
     }
             steps {
                 sh 'pwd ; df -k ; ls -al'
-                sh 'mvn -B -DskipTests clean package' 
+                sh 'mvn -B -DskipTests clean package'
+                sh 'cp -rp target /artifacts'
             }
         }
         stage('Test') {
