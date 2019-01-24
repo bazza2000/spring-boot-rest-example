@@ -33,8 +33,11 @@ pipeline {
 
         stage('Containerize') {
             steps {
-                sh 'pwd ; df -k ; ls -al'
                 sh "cp -rp /mnt/target . ; /usr/bin/docker build -t  ec2-63-34-137-130.eu-west-1.compute.amazonaws.com:8083/spring-boot-rest-example:${env.BUILD_ID} ."
+            }
+        }
+        stage('Push Image') {
+            steps {
                 sh '/usr/bin/docker login -u admin -p admin123 ec2-63-34-137-130.eu-west-1.compute.amazonaws.com:8083'
                 sh '/usr/bin/docker push ec2-63-34-137-130.eu-west-1.compute.amazonaws.com:8083/spring-boot-rest-example'
             }
