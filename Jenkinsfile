@@ -34,7 +34,7 @@ pipeline {
         stage('Containerize') {
             steps {
                 sh 'pwd ; df -k ; ls -al'
-                sh 'cp -rp /mnt/target . ; /usr/bin/docker build -t spring-boot-rest-example .'
+                sh "cp -rp /mnt/target . ; /usr/bin/docker build -t auth/spring-boot-rest-example:${env.BUILD_ID} ."
                 sh '/usr/bin/docker login -u admin -p admin123 ec2-63-34-137-130.eu-west-1.compute.amazonaws.com:8082'
             }
         }
