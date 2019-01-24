@@ -32,6 +32,7 @@ pipeline {
         stage('Containerize') {
             steps {
                 sh '/usr/bin/docker build -t spring-boot-rest-example .'
+                sh '/usr/bin/docker login -u admin -p admin123 ec2-63-34-137-130.eu-west-1.compute.amazonaws.com:8082'
             }
         }
     }
