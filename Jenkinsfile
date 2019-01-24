@@ -9,6 +9,7 @@ pipeline {
         }
     }
             steps {
+                sh 'pwd ; df -k ; ls -al'
                 sh 'mvn -B -DskipTests clean package' 
             }
         }
