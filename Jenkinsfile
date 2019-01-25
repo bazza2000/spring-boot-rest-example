@@ -9,7 +9,6 @@ pipeline {
         }
     }
             steps {
-                sh 'pwd ; df -k ; ls -al'
                 sh 'mvn -B -DskipTests clean package'
                 sh 'cp -rp target /artifacts'
             }
@@ -45,7 +44,7 @@ pipeline {
         stage('Kubernetes Deploy') {
           agent { label 'jenkins_host' }
           steps {
-                sh '/root/bin/kubectl apply -f /root/demo-service.yaml'
+                sh '. /root/.bashrc ; /root/bin/kubectl apply -f /root/demo-service.yaml'
           }
         }
     }
