@@ -1,0 +1,45 @@
+#!/bin/bash
+
+REPLICAS=3
+WAIT=10
+APPLICATION=replicationcontrollers/demo
+PATH=$PATH:/root/bin
+
+kubectl describe ${APPLICATION} >/dev/null 2>&1
+if [[ $? -ne 0 ]];then
+  echo "Error reading replica controller state...exiting"
+  exit 1
+fi
+
+running=`kubectl describe ${APPLICATION} |grep "^Pods Status" | awk '{print $3}'`
+
+while [[ "${running}" -ne ${REPLICAS} ]]
+do
+ echo "${running} of 3 replicas, waiting for ${WAIT} seconds"
+ sleep ${WAIT}
+ running=`kubectl describe ${APPLICATION} |grep "^Pods Status" | awk '{print $3}'`
+done
+echo "${running} of 3 replicas, application deployment complete"
+
+loadbalancer_url=`kubectl get svc -o=jsonpath='{.items[0].status.loadBalancer.ingress[0].hostname}'`
+while [[ ${loadbalancer_url} == "" ]]
+do
+  echo "Loadbalancer in Pending state, waiting ${WAIT} seconds"	 
+  sleep ${WAIT}
+  loadbalancer_url=`kubectl get svc -o=jsonpath='{.items[0].status.loadBalancer.ingress[0].hostname}'`
+done
+
+echo
+echo "Loadbalancer URL: ${loadbalancer_url}"
+
+RC=2
+while [[ ${RC} -ne 0 ]]
+do
+  host ${loadbalancer_url}
+  RC=$?
+  sleep ${WAIT}
+done
+
+echo
+echo "URL: ${loadbalancer_url} available to test"
+curl ${loadbalancer_url}:8091/health
