@@ -44,7 +44,7 @@ pipeline {
         stage('Kubernetes Deploy') {
           agent { label 'jenkins_host' }
           steps {
-              sh "PATH=$PATH:/root/bin ; cat /root/demo-service.yaml.1 | sed \"s/JOB_NUMBER/${env.BUILD_ID}/g\" > /root/demo-service.yaml ; /root/bin/kubectl apply -f /root/demo-service.yaml"
+              sh "PATH=$PATH:/root/bin ; /root/bin/kubectl delete -f /root/demo-service.yaml ; cat /root/demo-service.yaml.1 | sed \"s/JOB_NUMBER/${env.BUILD_ID}/g\" > /root/demo-service.yaml ; /root/bin/kubectl apply -f /root/demo-service.yaml"
                 sh "/root/check_deploy"
           }
         }
