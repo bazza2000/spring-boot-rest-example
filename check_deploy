@@ -32,14 +32,30 @@ done
 echo
 echo "Loadbalancer URL: ${loadbalancer_url}"
 
-RC=2
+host ${loadbalancer_url}
+RC=$?
 while [[ ${RC} -ne 0 ]]
 do
+  sleep ${WAIT}
   host ${loadbalancer_url}
   RC=$?
-  sleep ${WAIT}
 done
 
 echo
 echo "URL: ${loadbalancer_url} available to test"
-curl ${loadbalancer_url}:8091/health
+
+echo "Checking ${loadbalancer_url}:8091/health"
+curl --silent ${loadbalancer_url}:8091/health >/dev/null 2>&1
+RC=$?
+while [[ ${RC} -ne 0 ]]
+do
+  echo "waiting ${WAIT} seconds for service to start"
+  sleep ${WAIT}
+  curl --silent ${loadbalancer_url}:8091/health >/dev/null 2>&1
+  RC=$?
+done
+sleep 5
+echo
+curl --silent ${loadbalancer_url}:8091/health
+echo
+echo
