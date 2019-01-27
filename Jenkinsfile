@@ -45,6 +45,7 @@ pipeline {
           agent { label 'jenkins_host' }
           steps {
                 sh 'PATH=$PATH:/root/bin ; /root/bin/kubectl apply -f /root/demo-service.yaml'
+                sh "/root/check_deploy"
           }
         }
     }
